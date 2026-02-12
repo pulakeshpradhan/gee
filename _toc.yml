@@ -4,3 +4,4 @@ chapters:
 - file: gee_xee_dask
 - file: geopandas_osm
 - file: ml_stats
+- file: geemap_export
