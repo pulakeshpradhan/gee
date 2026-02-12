@@ -2,3 +2,5 @@ format: jb-book
 root: intro
 chapters:
 - file: gee_xee_dask
+- file: geopandas_osm
+- file: ml_stats
