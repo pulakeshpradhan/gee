@@ -1,0 +1,1323 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Google Earth Engine, Xarray, and Dask &#8212; Google Earth Engine with Xarray and Dask</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gee_xee_dask';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to GEE with XEE and Dask" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Google Earth Engine with Xarray and Dask</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to GEE with XEE and Dask
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Google Earth Engine, Xarray, and Dask</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/pulakeshpradhan/gee" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/pulakeshpradhan/gee/issues/new?title=Issue%20on%20page%20%2Fgee_xee_dask.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/gee_xee_dask.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Google Earth Engine, Xarray, and Dask</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask-integration">Dask Integration</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="google-earth-engine-xarray-and-dask">
+<h1>Google Earth Engine, Xarray, and Dask<a class="headerlink" href="#google-earth-engine-xarray-and-dask" title="Link to this heading">#</a></h1>
+<p>This notebook demonstrates how to load Google Earth Engine data as an Xarray dataset using the <code class="docutils literal notranslate"><span class="pre">xee</span></code> library, which allows for parallelized processing with <code class="docutils literal notranslate"><span class="pre">dask</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ee</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xee</span>
+
+<span class="c1"># Initialize Earth Engine</span>
+<span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="loading-data">
+<h2>Loading Data<a class="headerlink" href="#loading-data" title="Link to this heading">#</a></h2>
+<p>We will load ERA5-Land Hourly data for a specific region and time range.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">era5</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;ECMWF/ERA5_LAND/HOURLY&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filterDate</span><span class="p">(</span><span class="s1">&#39;2020-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2020-01-02&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;temperature_2m&#39;</span><span class="p">,</span> <span class="s1">&#39;total_precipitation&#39;</span><span class="p">])</span>
+
+<span class="c1"># Create Xarray Dataset</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+    <span class="n">era5</span><span class="p">,</span> 
+    <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;ee&#39;</span><span class="p">,</span> 
+    <span class="n">projection</span><span class="o">=</span><span class="n">ee</span><span class="o">.</span><span class="n">Projection</span><span class="p">(</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">),</span> 
+    <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">geometry</span><span class="o">=</span><span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>
+<span class="p">)</span>
+
+<span class="n">ds</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewBox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewBox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in notebooks */
+
+:root {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base rgba(0, 0, 0, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, white)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 15))
+  );
+}
+
+html[theme="dark"],
+html[data-theme="dark"],
+body[data-theme="dark"],
+body.vscode-dark {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base, rgba(255, 255, 255, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, #111111)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 15))
+  );
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-obj-name,
+.xr-group-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-group-name::before {
+  content: "📁";
+  padding-right: 0.3em;
+}
+
+.xr-group-name,
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 0 20px 0 20px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: inline-block;
+  opacity: 0;
+  height: 0;
+  margin: 0;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+  border: 2px solid transparent !important;
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:focus + label {
+  border: 2px solid var(--xr-font-color0) !important;
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: "►";
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: "▼";
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-group-box {
+  display: inline-grid;
+  grid-template-columns: 0px 20px auto;
+  width: 100%;
+}
+
+.xr-group-box-vline {
+  grid-column-start: 1;
+  border-right: 0.2em solid;
+  border-color: var(--xr-border-color);
+  width: 0px;
+}
+
+.xr-group-box-hline {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  height: 1em;
+  width: 20px;
+  border-bottom: 0.2em solid;
+  border-color: var(--xr-border-color);
+}
+
+.xr-group-box-contents {
+  grid-column-start: 3;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: "(";
+}
+
+.xr-dim-list:after {
+  content: ")";
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ",";
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  border-color: var(--xr-background-color-row-odd);
+  margin-bottom: 0;
+  padding-top: 2px;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+  border-color: var(--xr-background-color-row-even);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  border-top: 2px dotted var(--xr-background-color);
+  padding-bottom: 20px !important;
+  padding-top: 10px !important;
+}
+
+.xr-var-attrs-in + label,
+.xr-var-data-in + label,
+.xr-index-data-in + label {
+  padding: 0 1px;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-data > pre,
+.xr-index-data > pre,
+.xr-var-data > table > tbody > tr {
+  background-color: transparent !important;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.xr-var-attrs-in:checked + label > .xr-icon-file-text2,
+.xr-var-data-in:checked + label > .xr-icon-database,
+.xr-index-data-in:checked + label > .xr-icon-database {
+  color: var(--xr-font-color0);
+  filter: drop-shadow(1px 1px 5px var(--xr-font-color2));
+  stroke-width: 0.8px;
+}
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 44kB
+Dimensions:              (time: 24, lon: 15, lat: 15)
+Coordinates:
+  * time                 (time) datetime64[ns] 192B 2020-01-01 ... 2020-01-01...
+  * lon                  (lon) float64 120B 70.5 71.5 72.5 ... 82.5 83.5 84.5
+  * lat                  (lat) float64 120B 15.5 16.5 17.5 ... 27.5 28.5 29.5
+Data variables:
+    temperature_2m       (time, lon, lat) float32 22kB ...
+    total_precipitation  (time, lon, lat) float32 22kB ...
+Attributes: (12/33)
+    date_range:               [347155200000, 1640649600000]
+    description:              &lt;p&gt;ERA5-Land is a reanalysis dataset providing ...
+    keywords:                 [&#x27;cds&#x27;, &#x27;climate&#x27;, &#x27;copernicus&#x27;, &#x27;ecmwf&#x27;, &#x27;era5...
+    period:                   0
+    product_tags:             [&#x27;temperature&#x27;, &#x27;lakes&#x27;, &#x27;snow&#x27;, &#x27;soil_water&#x27;, ...
+    provider:                 Climate Data Store
+    ...                       ...
+    visualization_3_bands:    u_component_of_wind_10m
+    visualization_3_max:      30.0
+    visualization_3_min:      0.0
+    visualization_3_name:     u-component of wind at 10m
+    visualization_3_palette:  #FFFFFF,#FFFF71,#DEFF00,#9EFF00,#77B038,#007E55...
+    crs:                      EPSG:4326</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-bb23b939-3c26-40ea-9a14-6ec35524f89c' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-bb23b939-3c26-40ea-9a14-6ec35524f89c' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 24</li><li><span class='xr-has-index'>lon</span>: 15</li><li><span class='xr-has-index'>lat</span>: 15</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-7586582a-d600-4f94-8fc4-f00d9bb39e30' class='xr-section-summary-in' type='checkbox'  checked><label for='section-7586582a-d600-4f94-8fc4-f00d9bb39e30' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2020-01-01 ... 2020-01-01T23:00:00</div><input id='attrs-d4b78a2a-87ea-49a5-9e7f-d6ac85ece8d5' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-d4b78a2a-87ea-49a5-9e7f-d6ac85ece8d5' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ef7a48f4-39db-4509-9bcf-107b52e1ca52' class='xr-var-data-in' type='checkbox'><label for='data-ef7a48f4-39db-4509-9bcf-107b52e1ca52' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;2020-01-01T00:00:00.000000000&#x27;, &#x27;2020-01-01T01:00:00.000000000&#x27;,
+       &#x27;2020-01-01T02:00:00.000000000&#x27;, &#x27;2020-01-01T03:00:00.000000000&#x27;,
+       &#x27;2020-01-01T04:00:00.000000000&#x27;, &#x27;2020-01-01T05:00:00.000000000&#x27;,
+       &#x27;2020-01-01T06:00:00.000000000&#x27;, &#x27;2020-01-01T07:00:00.000000000&#x27;,
+       &#x27;2020-01-01T08:00:00.000000000&#x27;, &#x27;2020-01-01T09:00:00.000000000&#x27;,
+       &#x27;2020-01-01T10:00:00.000000000&#x27;, &#x27;2020-01-01T11:00:00.000000000&#x27;,
+       &#x27;2020-01-01T12:00:00.000000000&#x27;, &#x27;2020-01-01T13:00:00.000000000&#x27;,
+       &#x27;2020-01-01T14:00:00.000000000&#x27;, &#x27;2020-01-01T15:00:00.000000000&#x27;,
+       &#x27;2020-01-01T16:00:00.000000000&#x27;, &#x27;2020-01-01T17:00:00.000000000&#x27;,
+       &#x27;2020-01-01T18:00:00.000000000&#x27;, &#x27;2020-01-01T19:00:00.000000000&#x27;,
+       &#x27;2020-01-01T20:00:00.000000000&#x27;, &#x27;2020-01-01T21:00:00.000000000&#x27;,
+       &#x27;2020-01-01T22:00:00.000000000&#x27;, &#x27;2020-01-01T23:00:00.000000000&#x27;],
+      dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lon</span></div><div class='xr-var-dims'>(lon)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>70.5 71.5 72.5 ... 82.5 83.5 84.5</div><input id='attrs-04f14182-b6eb-44e1-8cb8-f399f0834033' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-04f14182-b6eb-44e1-8cb8-f399f0834033' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-43e28937-5f65-42c3-b1f4-9c591df28105' class='xr-var-data-in' type='checkbox'><label for='data-43e28937-5f65-42c3-b1f4-9c591df28105' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([70.5, 71.5, 72.5, 73.5, 74.5, 75.5, 76.5, 77.5, 78.5, 79.5, 80.5, 81.5,
+       82.5, 83.5, 84.5])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lat</span></div><div class='xr-var-dims'>(lat)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>15.5 16.5 17.5 ... 27.5 28.5 29.5</div><input id='attrs-38f09ec5-ccf1-4588-9ebf-53003b578e9d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-38f09ec5-ccf1-4588-9ebf-53003b578e9d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-4604766b-711c-4ca0-8c7c-6a1487f05f39' class='xr-var-data-in' type='checkbox'><label for='data-4604766b-711c-4ca0-8c7c-6a1487f05f39' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([15.5, 16.5, 17.5, 18.5, 19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5, 26.5,
+       27.5, 28.5, 29.5])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-02fa1d1a-f97f-4ccf-aa21-1bc499a44bcb' class='xr-section-summary-in' type='checkbox'  checked><label for='section-02fa1d1a-f97f-4ccf-aa21-1bc499a44bcb' class='xr-section-summary' >Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>temperature_2m</span></div><div class='xr-var-dims'>(time, lon, lat)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-1be7c710-36c6-4ab6-987a-69bf43b153e6' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-1be7c710-36c6-4ab6-987a-69bf43b153e6' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-0dd2e18d-47ad-4500-bc3f-53c7d5a6705c' class='xr-var-data-in' type='checkbox'><label for='data-0dd2e18d-47ad-4500-bc3f-53c7d5a6705c' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>id :</span></dt><dd>temperature_2m</dd><dt><span>data_type :</span></dt><dd>{&#x27;type&#x27;: &#x27;PixelType&#x27;, &#x27;precision&#x27;: &#x27;double&#x27;}</dd><dt><span>dimensions :</span></dt><dd>[3601, 1801]</dd><dt><span>crs :</span></dt><dd>EPSG:4326</dd><dt><span>crs_transform :</span></dt><dd>[0.1, 0, -180.05, 0, -0.1, 90.05]</dd></dl></div><div class='xr-var-data'><pre>[5400 values with dtype=float32]</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>total_precipitation</span></div><div class='xr-var-dims'>(time, lon, lat)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-8c4eb1a0-e78e-4105-a87d-e88f9c00ce6e' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-8c4eb1a0-e78e-4105-a87d-e88f9c00ce6e' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-7e331b50-6c4f-4790-9a01-e3bd163590fa' class='xr-var-data-in' type='checkbox'><label for='data-7e331b50-6c4f-4790-9a01-e3bd163590fa' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>id :</span></dt><dd>total_precipitation</dd><dt><span>data_type :</span></dt><dd>{&#x27;type&#x27;: &#x27;PixelType&#x27;, &#x27;precision&#x27;: &#x27;double&#x27;}</dd><dt><span>dimensions :</span></dt><dd>[3601, 1801]</dd><dt><span>crs :</span></dt><dd>EPSG:4326</dd><dt><span>crs_transform :</span></dt><dd>[0.1, 0, -180.05, 0, -0.1, 90.05]</dd></dl></div><div class='xr-var-data'><pre>[5400 values with dtype=float32]</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-f208cf3e-ebf3-4f62-b627-52c923598e23' class='xr-section-summary-in' type='checkbox'  ><label for='section-f208cf3e-ebf3-4f62-b627-52c923598e23' class='xr-section-summary' >Attributes: <span>(33)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>date_range :</span></dt><dd>[347155200000, 1640649600000]</dd><dt><span>description :</span></dt><dd>&lt;p&gt;ERA5-Land is a reanalysis dataset providing a consistent view of the evolution of land variables
+over several decades at an enhanced resolution compared to ERA5. ERA5-Land has been produced by
+replaying the land component of the ECMWF ERA5 climate reanalysis. Reanalysis combines model
+data with observations from across the world into a globally complete and consistent dataset
+using the laws of physics. Reanalysis produces data that goes several decades back in time,
+providing an accurate description of the climate of the past. This dataset includes all 50
+variables as available on CDS.&lt;/p&gt;&lt;p&gt;Please note that the convention for accumulations used in ERA5-Land differs with that for ERA5.
+The accumulations are treated the same as those in ERA-Interim or ERA-Interim/Land, i.e., they
+are accumulated from the beginning of the forecast to the end of the forecast step. This happens
+within every day and gets reset on midnight. The Earth Engine Data team added 19 additional bands,
+one for each of the accumulation bands, with the hourly values computed as the difference
+between two consecutive forecast steps.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Provider: &lt;a href=&quot;https://cds.climate.copernicus.eu/cdsapp&quot;&gt;Climate Data Store&lt;/a&gt;&lt;/b&gt;&lt;br&gt;&lt;p&gt;&lt;b&gt;Resolution&lt;/b&gt;&lt;br&gt;11132 meters
+&lt;/p&gt;&lt;p&gt;&lt;b&gt;Cadence&lt;/b&gt;&lt;br&gt;
+  1 hour
+&lt;/p&gt;&lt;p&gt;&lt;b&gt;Bands&lt;/b&gt;&lt;table class=&quot;eecat&quot;&gt;&lt;tr&gt;&lt;th scope=&quot;col&quot;&gt;Name&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;dewpoint_temperature_2m&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature to which the air, at 2 metres above the surface of the Earth, would have to be
+cooled for saturation to occur. It is a measure of the humidity of the air. Combined with
+temperature and pressure, it can be used to calculate the relative humidity. 2m dew point
+temperature is calculated by interpolating between the lowest model level and the Earth&amp;#39;s
+surface, taking account of the atmospheric conditions. Temperature measured in kelvin can be
+converted to degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;temperature_2m&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of air at 2m above the surface of land, sea or in-land waters. 2m temperature is
+calculated by interpolating between the lowest model level and the Earth&amp;#39;s surface, taking
+account of the atmospheric conditions. Temperature measured in kelvin can be converted to
+degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;skin_temperature&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of the surface of the Earth. The skin temperature is the theoretical temperature
+that is required to satisfy the surface energy balance. It represents the temperature of the
+uppermost surface layer, which has no heat capacity and so can respond instantaneously to
+changes in surface fluxes. Skin temperature is calculated differently over land and sea.
+Temperature measured in kelvin can be converted to degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;soil_temperature_level_1&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of the soil in layer 1 (0 - 7 cm) of the ECMWF Integrated Forecasting System. The
+surface is at 0 cm. Soil temperature is set at the middle of each layer, and heat transfer is
+calculated at the interfaces between them. It is assumed that there is no heat transfer out of
+the bottom of the lowest layer. Temperature measured in kelvin can be converted to degrees
+Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;soil_temperature_level_2&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of the soil in layer 2 (7-28 cm) of the ECMWF Integrated Forecasting System.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;soil_temperature_level_3&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of the soil in layer 3 (28-100 cm) of the ECMWF Integrated Forecasting System.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;soil_temperature_level_4&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of the soil in layer 4 (100-289 cm) of the ECMWF Integrated Forecasting System.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_bottom_temperature&lt;/td&gt;&lt;td&gt;&lt;p&gt;Temperature of water at the bottom of inland water bodies (lakes, reservoirs, rivers) and
+coastal waters. ECMWF implemented a lake model in May 2015 to represent the water temperature
+and lake ice of all the world’s major inland water bodies in the Integrated Forecasting System.
+The model keeps lake depth and surface area (or fractional cover) constant in time.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_ice_depth&lt;/td&gt;&lt;td&gt;&lt;p&gt;The thickness of ice on inland water bodies (lakes, reservoirs and rivers) and coastal waters.
+The ECMWF Integrated Forecasting System (IFS) represents the formation and melting of ice on
+inland water bodies (lakes, reservoirs and rivers) and coastal water. A single ice layer is
+represented. This parameter is the thickness of that ice layer.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_ice_temperature&lt;/td&gt;&lt;td&gt;&lt;p&gt;The temperature of the uppermost surface of ice on inland water bodies (lakes, reservoirs,
+rivers) and coastal waters. The ECMWF Integrated Forecasting System represents the formation
+and melting of ice on lakes. A single ice layer is represented. The temperature measured in
+kelvin can be converted to degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_mix_layer_depth&lt;/td&gt;&lt;td&gt;&lt;p&gt;The thickness of the upper most layer of an inland water body (lake, reservoirs, and rivers) or
+coastal waters that is well mixed and has a near constant temperature with depth (uniform
+distribution of temperature). The ECMWF Integrated Forecasting System represents inland water
+bodies with two layers in the vertical, the mixed layer above and the thermocline below.
+Thermoclines upper boundary is located at the mixed layer bottom, and the lower boundary at the
+lake bottom. Mixing within the mixed layer can occur when the density of the surface (and
+near-surface) water is greater than that of the water below. Mixing can also occur through the
+action of wind on the surface of the lake.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_mix_layer_temperature&lt;/td&gt;&lt;td&gt;&lt;p&gt;The temperature of the upper most layer of inland water bodies (lakes, reservoirs and rivers)
+or coastal waters) that is well mixed. The ECMWF Integrated Forecasting System represents
+inland water bodies with two layers in the vertical, the mixed layer above and the thermocline
+below. Thermoclines upper boundary is located at the mixed layer bottom, and the lower boundary
+at the lake bottom. Mixing within the mixed layer can occur when the density of the surface
+(and near-surface) water is greater than that of the water below. Mixing can also occur through
+the action of wind on the surface of the lake. Temperature measured in kelvin can be converted
+to degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_shape_factor&lt;/td&gt;&lt;td&gt;&lt;p&gt;This parameter describes the way that temperature changes with depth in the thermocline layer
+of inland water bodies (lakes, reservoirs and rivers) and coastal waters. It is used to
+calculate the lake bottom temperature and other lake-related parameters. The ECMWF Integrated
+Forecasting System represents inland and coastal water bodies with two layers in the vertical,
+the mixed layer above and the thermocline below where temperature changes with depth.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;lake_total_layer_temperature&lt;/td&gt;&lt;td&gt;&lt;p&gt;The mean temperature of total water column in inland water bodies (lakes, reservoirs and
+rivers) and coastal waters. The ECMWF Integrated Forecasting System represents inland water
+bodies with two layers in the vertical, the mixed layer above and the thermocline below where
+temperature changes with depth. This parameter is the mean over the two layers. Temperature
+measured in kelvin can be converted to degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_albedo&lt;/td&gt;&lt;td&gt;&lt;p&gt;It is defined as the fraction of solar (shortwave) radiation reflected by the snow, across the
+solar spectrum, for both direct and diffuse radiation. It is a measure of the reflectivity of
+the snow covered grid cells. Values vary between 0 and 1. Typically, snow and ice have high
+reflectivity with albedo values of 0.8 and above.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_cover&lt;/td&gt;&lt;td&gt;&lt;p&gt;It represents the fraction (0-1) of the cell / grid-box occupied by snow (similar to the cloud
+cover fields of ERA5).&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_density&lt;/td&gt;&lt;td&gt;&lt;p&gt;Mass of snow per cubic metre in the snow layer. The ECMWF Integrated Forecast System (IFS)
+model represents snow as a single additional layer over the uppermost soil level. The snow may
+cover all or part of the grid box.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_depth&lt;/td&gt;&lt;td&gt;&lt;p&gt;Instantaneous grib-box average of the snow thickness on the ground (excluding snow on canopy).&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_depth_water_equivalent&lt;/td&gt;&lt;td&gt;&lt;p&gt;Depth of snow from the snow-covered area of a grid box. Its units are metres of water
+equivalent, so it is the depth the water would have if the snow melted and was spread evenly
+over the whole grid box. The ECMWF Integrated Forecast System represents snow as a single
+additional layer over the uppermost soil level. The snow may cover all or part of the grid box.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snowfall&lt;/td&gt;&lt;td&gt;&lt;p&gt;Accumulated total snow that has fallen to the Earth&amp;#39;s surface. It consists of snow due to the
+large-scale atmospheric flow (horizontal scales greater than around a few hundred metres) and
+convection where smaller scale areas (around 5km to a few hundred kilometres) of warm air rise.
+If snow has melted during the period over which this variable was accumulated, then it will be
+higher than the snow depth. This variable is the total amount of water accumulated from the
+beginning of the forecast time to the end of the forecast step. The units given measure the
+depth the water would have if the snow melted and was spread evenly over the grid box. Care
+should be taken when comparing model variables with observations, because observations are
+often local to a particular point in space and time, rather than representing averages over a
+model grid box and model time step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snowmelt&lt;/td&gt;&lt;td&gt;&lt;p&gt;Melting of snow averaged over the grid box (to find melt over snow, divide by snow fraction).
+This variable is accumulated from the beginning of the forecast time to the end of the forecast
+step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;temperature_of_snow_layer&lt;/td&gt;&lt;td&gt;&lt;p&gt;This variable gives the temperature of the snow layer from the ground to the snow-air
+interface. The ECMWF Integrated Forecast System (IFS) model represents snow as a single
+additional layer over the uppermost soil level. The snow may cover all or part of the grid box.
+Temperature measured in kelvin can be converted to degrees Celsius (°C) by subtracting 273.15.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;skin_reservoir_content&lt;/td&gt;&lt;td&gt;&lt;p&gt;Amount of water in the vegetation canopy and/or in a thin layer on the soil. It represents the
+amount of rain intercepted by foliage, and water from dew. The maximum amount of &amp;#39;skin
+reservoir content&amp;#39; a grid box can hold depends on the type of vegetation, and may be zero.
+Water leaves the &amp;#39;skin reservoir&amp;#39; by evaporation.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;volumetric_soil_water_layer_1&lt;/td&gt;&lt;td&gt;&lt;p&gt;Volume of water in soil layer 1 (0 - 7 cm) of the ECMWF Integrated Forecasting System. The
+surface is at 0 cm. The volumetric soil water is associated with the soil texture (or
+classification), soil depth, and the underlying groundwater level.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;volumetric_soil_water_layer_2&lt;/td&gt;&lt;td&gt;&lt;p&gt;Volume of water in soil layer 2 (7 -28 cm) of the ECMWF Integrated Forecasting System.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;volumetric_soil_water_layer_3&lt;/td&gt;&lt;td&gt;&lt;p&gt;Volume of water in soil layer 3 (28-100 cm) of the ECMWF Integrated Forecasting System.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;volumetric_soil_water_layer_4&lt;/td&gt;&lt;td&gt;&lt;p&gt;Volume of water in soil layer 4 (100-289 cm) of the ECMWF Integrated Forecasting System.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;forecast_albedo&lt;/td&gt;&lt;td&gt;&lt;p&gt;Is a measure of the reflectivity of the Earth&amp;#39;s surface. It is the fraction of solar
+(shortwave) radiation reflected by Earth&amp;#39;s surface, across the solar spectrum, for both direct
+and diffuse radiation. Values are between 0 and 1. Typically, snow and ice have high
+reflectivity with albedo values of 0.8 and above, land has intermediate values between about
+0.1 and 0.4 and the ocean has low values of 0.1 or less. Radiation from the Sun (solar, or
+shortwave, radiation) is partly reflected back to space by clouds and particles in the
+atmosphere (aerosols) and some of it is absorbed. The rest is incident on the Earth&amp;#39;s surface,
+where some of it is reflected. The portion that is reflected by the Earth&amp;#39;s surface depends on
+the albedo. In the ECMWF Integrated Forecasting System (IFS), a climatological background
+albedo (observed values averaged over a period of several years) is used, modified by the model
+over water, ice and snow. Albedo is often shown as a percentage (%).&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_latent_heat_flux&lt;/td&gt;&lt;td&gt;&lt;p&gt;Exchange of latent heat with the surface through turbulent diffusion. This variables is
+accumulated from the beginning of the forecast time to the end of the forecast step. By model
+convention, downward fluxes are positive.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_net_solar_radiation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Amount of solar radiation (also known as shortwave radiation) reaching the surface of the
+Earth (both direct and diffuse) minus the amount reflected by the Earth&amp;#39;s surface (which is
+governed by the albedo).Radiation from the Sun (solar, or shortwave, radiation) is partly
+reflected back to space by clouds and particles in the atmosphere (aerosols) and some of it is
+absorbed. The rest is incident on the Earth&amp;#39;s surface, where some of it is reflected. The
+difference between downward and reflected solar radiation is the surface net solar radiation.
+This variable is accumulated from the beginning of the forecast time to the end of the forecast
+step. The units are joules per square metre (J m-2). To convert to watts per square metre
+(W m-2), the accumulated values should be divided by the accumulation period expressed in
+seconds. The ECMWF convention for vertical fluxes is positive downwards.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_net_thermal_radiation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Net thermal radiation at the surface. Accumulated field from the beginning of the forecast
+time to the end of the forecast step. By model convention downward fluxes are positive.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_sensible_heat_flux&lt;/td&gt;&lt;td&gt;&lt;p&gt;Transfer of heat between the Earth&amp;#39;s surface and the atmosphere through the effects of
+turbulent air motion (but excluding any heat transfer resulting from condensation or
+evaporation). The magnitude of the sensible heat flux is governed by the difference in
+temperature between the surface and the overlying atmosphere, wind speed and the surface
+roughness. For example, cold air overlying a warm surface would produce a sensible heat flux
+from the land (or ocean) into the atmosphere. This is a single level variable and it is
+accumulated from the beginning of the forecast time to the end of the forecast step. The units
+are joules per square metre (J m-2). To convert to watts per square metre (W m-2), the
+accumulated values should be divided by the accumulation period expressed in seconds. The ECMWF
+convention for vertical fluxes is positive downwards.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_solar_radiation_downwards&lt;/td&gt;&lt;td&gt;&lt;p&gt;Amount of solar radiation (also known as shortwave radiation) reaching the surface of the
+Earth. This variable comprises both direct and diffuse solar radiation. Radiation from the Sun
+(solar, or shortwave, radiation) is partly reflected back to space by clouds and particles in
+the atmosphere (aerosols) and some of it is absorbed. The rest is incident on the Earth&amp;#39;s
+surface (represented by this variable). To a reasonably good approximation, this variable is
+the model equivalent of what would be measured by a pyranometer (an instrument used for
+measuring solar radiation) at the surface. However, care should be taken when comparing model
+variables with observations, because observations are often local to a particular point in
+space and time, rather than representing averages over a model grid box and model time step.
+This variable is accumulated from the beginning of the forecast time to the end of the forecast
+step. The units are joules per square metre (J m-2). To convert to watts per square metre
+(W m-2), the accumulated values should be divided by the accumulation period expressed in
+seconds. The ECMWF convention for vertical fluxes is positive downwards.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_thermal_radiation_downwards&lt;/td&gt;&lt;td&gt;&lt;p&gt;Amount of thermal (also known as longwave or terrestrial) radiation emitted by the atmosphere
+and clouds that reaches the Earth&amp;#39;s surface. The surface of the Earth emits thermal radiation,
+some of which is absorbed by the atmosphere and clouds. The atmosphere and clouds likewise emit
+thermal radiation in all directions, some of which reaches the surface (represented by this
+variable). This variable is accumulated from the beginning of the forecast time to the end of
+the forecast step. The units are joules per square metre (J m-2). To convert to watts per
+square metre (W m-2), the accumulated values should be divided by the accumulation period
+expressed in seconds. The ECMWF convention for vertical fluxes is positive downwards.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_bare_soil&lt;/td&gt;&lt;td&gt;&lt;p&gt;The amount of evaporation from bare soil at the top of the land surface. This variable is
+accumulated from the beginning of the forecast time to the end of the forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_open_water_surfaces_excluding_oceans&lt;/td&gt;&lt;td&gt;&lt;p&gt;Amount of evaporation from surface water storage like lakes and inundated areas but excluding
+oceans. This variable is accumulated from the beginning of the forecast time to the end of the
+forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_the_top_of_canopy&lt;/td&gt;&lt;td&gt;&lt;p&gt;The amount of evaporation from the canopy interception reservoir at the top of the canopy.
+This variable is accumulated from the beginning of the forecast time to the end of the forecast
+step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_vegetation_transpiration&lt;/td&gt;&lt;td&gt;&lt;p&gt;Amount of evaporation from vegetation transpiration. This has the same meaning as root
+extraction i.e. the amount of water extracted from the different soil layers. This variable is
+accumulated from the beginning of the forecast time to the end of the forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;potential_evaporation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Potential evaporation (pev) in the current ECMWF model is computed, by making a second call to
+the surface energy balance routine with the vegetation variables set to &amp;quot;crops/mixed farming&amp;quot;
+and assuming no stress from soil moisture. In other words, evaporation is computed for
+agricultural land as if it is well watered and assuming that the atmosphere is not affected by
+this artificial surface condition. The latter may not always be realistic. Although pev is
+meant to provide an estimate of irrigation requirements, the method can give unrealistic
+results in arid conditions due to too strong evaporation forced by dry air. This variable is
+accumulated from the beginning of the forecast time to the end of the forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;runoff&lt;/td&gt;&lt;td&gt;&lt;p&gt;Some water from rainfall, melting snow, or deep in the soil, stays stored in the soil.
+Otherwise, the water drains away, either over the surface (surface runoff), or under the ground
+(sub-surface runoff) and the sum of these two is simply called &amp;#39;runoff&amp;#39;. This variable is the
+total amount of water accumulated from the beginning of the forecast time to the end of the
+forecast step. The units of runoff are depth in metres. This is the depth the water would have
+if it were spread evenly over the grid box. Care should be taken when comparing model variables
+with observations, because observations are often local to a particular point rather than
+averaged over a grid square area. Observations are also often taken in different units, such as
+mm/day, rather than the accumulated metres produced here. Runoff is a measure of the
+availability of water in the soil, and can, for example, be used as an indicator of drought or
+flood. More information about how runoff is calculated is given in the IFS Physical Processes
+documentation.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_evaporation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Evaporation from snow averaged over the grid box (to find flux over snow, divide by snow
+fraction). This variable is accumulated from the beginning of the forecast time to the end of
+the forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;sub_surface_runoff&lt;/td&gt;&lt;td&gt;&lt;p&gt;Some water from rainfall, melting snow, or deep in the soil, stays stored in the soil.
+Otherwise, the water drains away, either over the surface (surface runoff), or under the ground
+(sub-surface runoff) and the sum of these two is simply called &amp;#39;runoff&amp;#39;. This variable is
+accumulated from the beginning of the forecast time to the end of the forecast step. The units
+of runoff are depth in metres. This is the depth the water would have if it were spread evenly
+over the grid box. Care should be taken when comparing model variables with observations,
+because observations are often local to a particular point rather than averaged over a grid
+square area. Observations are also often taken in different units, such as mm/day, rather than
+the accumulated metres produced here. Runoff is a measure of the availability of water in the
+soil, and can, for example, be used as an indicator of drought or flood. More information about
+how runoff is calculated is given in the IFS Physical Processes documentation.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_runoff&lt;/td&gt;&lt;td&gt;&lt;p&gt;Some water from rainfall, melting snow, or deep in the soil, stays stored in the soil.
+Otherwise, the water drains away, either over the surface (surface runoff), or under the ground
+(sub-surface runoff) and the sum of these two is simply called &amp;#39;runoff&amp;#39;. This variable is the
+total amount of water accumulated from the beginning of the forecast time to the end of the
+forecast step. The units of runoff are depth in metres. This is the depth the water would have
+if it were spread evenly over the grid box. Care should be taken when comparing model variables
+with observations, because observations are often local to a particular point rather than
+averaged over a grid square area. Observations are also often taken in different units, such as
+mm/day, rather than the accumulated metres produced here. Runoff is a measure of the
+availability of water in the soil, and can, for example, be used as an indicator of drought or
+flood. More information about how runoff is calculated is given in the IFS Physical Processes
+documentation.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;total_evaporation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Accumulated amount of water that has evaporated from the Earth&amp;#39;s surface, including a
+simplified representation of transpiration (from vegetation), into vapour in the air above.
+This variable is accumulated from the beginning of the forecast to the end of the forecast
+step. The ECMWF Integrated Forecasting System convention is that downward fluxes are positive.
+Therefore, negative values indicate evaporation and positive values indicate condensation.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;u_component_of_wind_10m&lt;/td&gt;&lt;td&gt;&lt;p&gt;Eastward component of the 10m wind. It is the horizontal speed of air moving towards the east,
+at a height of ten metres above the surface of the Earth, in metres per second. Care should be
+taken when comparing this variable with observations, because wind observations vary on small
+space and time scales and are affected by the local terrain, vegetation and buildings that are
+represented only on average in the ECMWF Integrated Forecasting System. This variable can be
+combined with the V component of 10m wind to give the speed and direction of the horizontal 10m
+wind.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;v_component_of_wind_10m&lt;/td&gt;&lt;td&gt;&lt;p&gt;Northward component of the 10m wind. It is the horizontal speed of air moving towards the
+north, at a height of ten metres above the surface of the Earth, in metres per second. Care
+should be taken when comparing this variable with observations, because wind observations vary
+on small space and time scales and are affected by the local terrain, vegetation and buildings
+that are represented only on average in the ECMWF Integrated Forecasting System. This variable
+can be combined with the U component of 10m wind to give the speed and direction of the
+horizontal 10m wind.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_pressure&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pressure (force per unit area) of the atmosphere on the surface of land, sea and in-land
+water. It is a measure of the weight of all the air in a column vertically above the area of
+the Earth&amp;#39;s surface represented at a fixed point. Surface pressure is often used in combination
+with temperature to calculate air density. The strong variation of pressure with altitude makes
+it difficult to see the low and high pressure systems over mountainous areas, so mean sea level
+pressure, rather than surface pressure, is normally used for this purpose. The units of this
+variable are Pascals (Pa). Surface pressure is often measured in hPa and sometimes is presented
+in the old units of millibars, mb (1 hPa = 1 mb = 100 Pa).&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;total_precipitation&lt;/td&gt;&lt;td&gt;&lt;p&gt;Accumulated liquid and frozen water, including rain and snow, that falls to the Earth&amp;#39;s
+surface. It is the sum of large-scale precipitation (that precipitation which is generated by
+large-scale weather patterns, such as troughs and cold fronts) and convective precipitation
+(generated by convection which occurs when air at lower levels in the atmosphere is warmer and
+less dense than the air above, so it rises). Precipitation variables do not include fog, dew or
+the precipitation that evaporates in the atmosphere before it lands at the surface of the
+Earth. This variable is accumulated from the beginning of the forecast time to the end of the
+forecast step. The units of precipitation are depth in metres. It is the depth the water would
+have if it were spread evenly over the grid box. Care should be taken when comparing model
+variables with observations, because observations are often local to a particular point in
+space and time, rather than representing averages over a model grid box and model time step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;leaf_area_index_high_vegetation&lt;/td&gt;&lt;td&gt;&lt;p&gt;One-half of the total green leaf area per unit horizontal ground surface area for high
+vegetation type.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;leaf_area_index_low_vegetation&lt;/td&gt;&lt;td&gt;&lt;p&gt;One-half of the total green leaf area per unit horizontal ground surface area for low
+vegetation type.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snowfall_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;snowfall&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snowmelt_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;snowmelt&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_latent_heat_flux_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_latent_heat_flux&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_net_solar_radiation_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_net_solar_radiation&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_net_thermal_radiation_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_net_thermal_radiation&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_sensible_heat_flux_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_sensible_heat_flux&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_solar_radiation_downwards_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_solar_radiation_downwards&amp;#39; except not accumulated and
+only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_thermal_radiation_downwards_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_thermal_radiation_downwards&amp;#39; except not accumulated and
+only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_bare_soil_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;evaporation_from_bare_soil&amp;#39; except not accumulated and
+only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_open_water_surfaces_excluding_oceans_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;evaporation_from_open_water_surfaces_excluding_oceans&amp;#39; except not accumulated and
+only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_the_top_of_canopy_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;evaporation_from_the_top_of_canopy&amp;#39; except not accumulated and
+only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;evaporation_from_vegetation_transpiration_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;evaporation_from_vegetation_transpiration&amp;#39; except not accumulated and
+only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;potential_evaporation_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;potential_evaporation&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;runoff_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;runoff&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;snow_evaporation_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;snow_evaporation&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;sub_surface_runoff_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;sub_surface_runoff&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;surface_runoff_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;surface_runoff&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;total_evaporation_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;total_evaporation&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;total_precipitation_hourly&lt;/td&gt;&lt;td&gt;&lt;p&gt;Same as &amp;#39;total_precipitation&amp;#39; except not accumulated and only for the given forecast step.&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;b&gt;Image Properties&lt;/b&gt;&lt;table class=&quot;eecat&quot;&gt;&lt;tr&gt;&lt;th scope=&quot;col&quot;&gt;Name&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Type&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Description&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;hour&lt;/td&gt;&lt;td&gt;INT&lt;/td&gt;&lt;td&gt;&lt;p&gt;Hour of the day&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;&lt;sup&gt;ERA5-Land data is available from 1981 to three months from real-time. More information
+can be found at the &lt;a href=&quot;https://cds.climate.copernicus.eu&quot;&gt;Copernicus Climate Data Store&lt;/a&gt;.&lt;/sup&gt;&lt;p&gt;&lt;b&gt;Terms of Use&lt;/b&gt;&lt;br&gt;&lt;p&gt;Please acknowledge the use of ERA5-Land as stated in the
+&lt;a href=&quot;https://apps.ecmwf.int/datasets/licences/copernicus/&quot;&gt;Copernicus C3S/CAMS License agreement&lt;/a&gt;:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;5.1.2 Where the Licensee communicates or distributes Copernicus Products to the public, the
+Licensee shall inform the recipients of the source by using the following or any similar notice:
+&amp;#39;Generated using Copernicus Climate Change Service Information [Year]&amp;#39;.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;5.1.3 Where the Licensee makes or contributes to a publication or distribution containing
+adapted or modified Copernicus Products, the Licensee shall provide the following or any similar
+notice: &amp;#39;Contains modified Copernicus Climate Change Service Information [Year]&amp;#39;;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Any such publication or distribution covered by clauses 5.1.1 and 5.1.2 shall state that neither
+the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus
+Information or Data it contains.&lt;/p&gt;&lt;p&gt;&lt;b&gt;Suggested citation(s)&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&lt;p&gt;Mu&amp;ntilde;oz Sabater, J., (2019): ERA5-Land hourly data from 1981 to present. Copernicus Climate
+Change Service (C3S) Climate Data Store (CDS). (&amp;lt;date of access&amp;gt;),
+&lt;a href=&quot;https://doi.org/10.24381/cds.e2161bac&quot;&gt;doi:10.24381/cds.e2161bac&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;style&gt;
+  table.eecat {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 13px;
+  }
+  table.eecat td, tr, th {
+  text-align: left; vertical-align: top;
+  border: 1px solid gray; padding: 3px;
+  }
+  td.nobreak { white-space: nowrap; }
+&lt;/style&gt;</dd><dt><span>keywords :</span></dt><dd>[&#x27;cds&#x27;, &#x27;climate&#x27;, &#x27;copernicus&#x27;, &#x27;ecmwf&#x27;, &#x27;era5-land&#x27;, &#x27;evaporation&#x27;, &#x27;heat&#x27;, &#x27;lakes&#x27;, &#x27;precipitation&#x27;, &#x27;pressure&#x27;, &#x27;radiation&#x27;, &#x27;reanalysis&#x27;, &#x27;runoff&#x27;, &#x27;snow&#x27;, &#x27;soil_water&#x27;, &#x27;temperature&#x27;, &#x27;vegetation&#x27;, &#x27;wind&#x27;]</dd><dt><span>period :</span></dt><dd>0</dd><dt><span>product_tags :</span></dt><dd>[&#x27;temperature&#x27;, &#x27;lakes&#x27;, &#x27;snow&#x27;, &#x27;soil_water&#x27;, &#x27;radiation&#x27;, &#x27;heat&#x27;, &#x27;evaporation&#x27;, &#x27;runoff&#x27;, &#x27;wind&#x27;, &#x27;pressure&#x27;, &#x27;precipitation&#x27;, &#x27;vegetation&#x27;, &#x27;climate&#x27;]</dd><dt><span>provider :</span></dt><dd>Climate Data Store</dd><dt><span>provider_url :</span></dt><dd>https://cds.climate.copernicus.eu/cdsapp</dd><dt><span>sample :</span></dt><dd>https://mw1.google.com/ges/dd/images/ERA5_LAND_sample.png</dd><dt><span>source_tags :</span></dt><dd>[&#x27;ecmwf&#x27;, &#x27;cds&#x27;, &#x27;copernicus&#x27;, &#x27;era5-land&#x27;, &#x27;reanalysis&#x27;]</dd><dt><span>tags :</span></dt><dd>[&#x27;cds&#x27;, &#x27;climate&#x27;, &#x27;copernicus&#x27;, &#x27;ecmwf&#x27;, &#x27;era5-land&#x27;, &#x27;evaporation&#x27;, &#x27;heat&#x27;, &#x27;lakes&#x27;, &#x27;precipitation&#x27;, &#x27;pressure&#x27;, &#x27;radiation&#x27;, &#x27;reanalysis&#x27;, &#x27;runoff&#x27;, &#x27;snow&#x27;, &#x27;soil_water&#x27;, &#x27;temperature&#x27;, &#x27;vegetation&#x27;, &#x27;wind&#x27;]</dd><dt><span>title :</span></dt><dd>ERA5-Land Hourly - ECMWF Climate Reanalysis</dd><dt><span>type_name :</span></dt><dd>ImageCollection</dd><dt><span>visualization_0_bands :</span></dt><dd>temperature_2m</dd><dt><span>visualization_0_max :</span></dt><dd>320.0</dd><dt><span>visualization_0_min :</span></dt><dd>250.0</dd><dt><span>visualization_0_name :</span></dt><dd>Air temperature [K] at 2m height</dd><dt><span>visualization_0_palette :</span></dt><dd>#000080,#0000D9,#4000FF,#8000FF,#0080FF,#00FFFF,#00FF80,#80FF00,#DAFF00,#FFFF00,#FFF500,#FFDA00,#FFB000,#FFA400,#FF4F00,#FF2500,#FF0A00,#FF00FF</dd><dt><span>visualization_1_bands :</span></dt><dd>total_precipitation</dd><dt><span>visualization_1_max :</span></dt><dd>0.1</dd><dt><span>visualization_1_min :</span></dt><dd>0.0</dd><dt><span>visualization_1_name :</span></dt><dd>Total precipitation in m</dd><dt><span>visualization_1_palette :</span></dt><dd>#FFFFFF,#00FFFF,#0080FF,#DA00FF,#FFA400,#FF0000</dd><dt><span>visualization_2_bands :</span></dt><dd>surface_pressure</dd><dt><span>visualization_2_max :</span></dt><dd>1150.0</dd><dt><span>visualization_2_min :</span></dt><dd>500.0</dd><dt><span>visualization_2_name :</span></dt><dd>Surface pressure</dd><dt><span>visualization_2_palette :</span></dt><dd>#01FFFF,#058BFF,#0600FF,#DF00FF,#FF00FF,#FF8C00,#FF8C00</dd><dt><span>visualization_3_bands :</span></dt><dd>u_component_of_wind_10m</dd><dt><span>visualization_3_max :</span></dt><dd>30.0</dd><dt><span>visualization_3_min :</span></dt><dd>0.0</dd><dt><span>visualization_3_name :</span></dt><dd>u-component of wind at 10m</dd><dt><span>visualization_3_palette :</span></dt><dd>#FFFFFF,#FFFF71,#DEFF00,#9EFF00,#77B038,#007E55,#005F51,#004B51,#013A7B,#023AAD</dd><dt><span>crs :</span></dt><dd>EPSG:4326</dd></dl></div></li></ul></div></div></div></div>
+</div>
+</section>
+<section id="dask-integration">
+<h2>Dask Integration<a class="headerlink" href="#dask-integration" title="Link to this heading">#</a></h2>
+<p>The dataset is lazily loaded. We can use Dask to perform computations in parallel.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example computation: Mean temperature over time</span>
+<span class="n">mean_temp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">temperature_2m</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+
+<span class="c1"># Trigger computation</span>
+<span class="n">mean_temp</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x17d042917f0&gt;
+</pre></div>
+</div>
+<img alt="_images/69aa06128de0258cec5a25a6619aaa968d850ed019c48bf3069413188d9e3df5.png" src="_images/69aa06128de0258cec5a25a6619aaa968d850ed019c48bf3069413188d9e3df5.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome to GEE with XEE and Dask</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-data">Loading Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dask-integration">Dask Integration</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Pulakesh Pradhan
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
