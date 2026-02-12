@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Welcome to GEE with XEE and Dask &#8212; Google Earth Engine with Xarray and Dask</title>
+    <title>Geemap: Data Export and Local Analysis &#8212; Google Earth Engine with Xarray and Dask</title>
   
   
   
@@ -57,10 +57,10 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'geemap_export';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Google Earth Engine, Xarray, and Dask" href="gee_xee_dask.html" />
+    <link rel="prev" title="Machine Learning and Statistics with GEE" href="ml_stats.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -123,8 +123,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -143,7 +141,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="intro.html">
   
   
   
@@ -168,17 +166,17 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     Welcome to GEE with XEE and Dask
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="gee_xee_dask.html">Google Earth Engine, Xarray, and Dask</a></li>
 <li class="toctree-l1"><a class="reference internal" href="geopandas_osm.html">GeoPandas and OSM Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ml_stats.html">Machine Learning and Statistics with GEE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="geemap_export.html">Geemap: Data Export and Local Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Geemap: Data Export and Local Analysis</a></li>
 </ul>
 
     </div>
@@ -250,7 +248,7 @@
       
       
       
-      <li><a href="https://github.com/pulakeshpradhan/gee/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/pulakeshpradhan/gee/issues/new?title=Issue%20on%20page%20%2Fgeemap_export.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -280,7 +278,7 @@
       
       
       
-      <li><a href="_sources/intro.md" target="_blank"
+      <li><a href="_sources/geemap_export.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -290,7 +288,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
 </li>
       
@@ -364,7 +362,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Welcome to GEE with XEE and Dask</h1>
+    <h1>Geemap: Data Export and Local Analysis</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -374,9 +372,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content">Content</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials">Tutorials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#external-resources">External Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-data-with-geemap">Exporting Data with Geemap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-exported-data-with-xarray">Loading Exported Data with Xarray</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-direct-loading-vs-export">Comparing Direct Loading vs. Export</a></li>
 </ul>
             </nav>
         </div>
@@ -388,41 +386,102 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-gee-with-xee-and-dask">
-<h1>Welcome to GEE with XEE and Dask<a class="headerlink" href="#welcome-to-gee-with-xee-and-dask" title="Link to this heading">#</a></h1>
-<p>This project demonstrates how to use Google Earth Engine (GEE) with <code class="docutils literal notranslate"><span class="pre">xarray</span></code> and <code class="docutils literal notranslate"><span class="pre">dask</span></code> using the <code class="docutils literal notranslate"><span class="pre">xee</span></code> extension.</p>
-<section id="content">
-<h2>Content<a class="headerlink" href="#content" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><strong>GEE &amp; Xarray (Xee)</strong>: Integration of Google Earth Engine with Xarray for multidimensional analysis.</p></li>
-<li><p><strong>Dask Parallelization</strong>: Scaling geospatial computations with Dask.</p></li>
-<li><p><strong>GeoPandas &amp; OSM</strong>: Combining GEE data with local vector data and OpenStreetMap.</p></li>
-<li><p><strong>ML &amp; Statistics</strong>: Implementing Scikit-Learn and statistical models on Earth Engine data.</p></li>
-<li><p><strong>Geemap Export</strong>: Direct downloading of data for fast local analysis.</p></li>
-</ul>
-</section>
-<section id="tutorials">
-<h2>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><a class="reference internal" href="gee_xee_dask.html"><span class="std std-doc">Basics: GEE with Xee &amp; Dask</span></a></p></li>
-<li><p><a class="reference internal" href="geopandas_osm.html"><span class="std std-doc">Vector Integration: GeoPandas &amp; OSM</span></a></p></li>
-<li><p><a class="reference internal" href="ml_stats.html"><span class="std std-doc">Analytics: ML &amp; Statistics</span></a></p></li>
-<li><p><a class="reference internal" href="geemap_export.html"><span class="std std-doc">Storage: Geemap Export &amp; Local Load</span></a></p></li>
-</ol>
-</section>
-<section id="external-resources">
-<h2>External Resources<a class="headerlink" href="#external-resources" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/google/Xee">Xee Documentation</a></p></li>
-<li><p><a class="reference external" href="https://developers.google.com/earth-engine">Google Earth Engine Developer Guide</a></p></li>
-<li><p><a class="reference external" href="https://docs.xarray.dev/">Xarray: N-D labeled arrays and datasets in Python</a></p></li>
-<li><p><a class="reference external" href="https://www.dask.org/">Dask: Scale Python workflows</a></p></li>
-<li><p><a class="reference external" href="https://geopandas.org/">GeoPandas Documentation</a></p></li>
-<li><p><a class="reference external" href="https://osmnx.readthedocs.io/">OSMnx: Retrieve, model, and analyze OSM data</a></p></li>
-</ul>
-</section>
-<div class="toctree-wrapper compound">
+  <section class="tex2jax_ignore mathjax_ignore" id="geemap-data-export-and-local-analysis">
+<h1>Geemap: Data Export and Local Analysis<a class="headerlink" href="#geemap-data-export-and-local-analysis" title="Link to this heading">#</a></h1>
+<p>While <code class="docutils literal notranslate"><span class="pre">xee</span></code> allows for direct lazy loading, sometimes it is necessary to download data for offline processing or specific legacy workflows. This notebook demonstrates how to use <code class="docutils literal notranslate"><span class="pre">geemap</span></code> to export Earth Engine data to local storage and then analyze it using the standard Python geospatial stack.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ee</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geemap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rioxarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Initialize Earth Engine</span>
+<span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">()</span>
+</pre></div>
 </div>
+</div>
+</div>
+<section id="exporting-data-with-geemap">
+<h2>Exporting Data with Geemap<a class="headerlink" href="#exporting-data-with-geemap" title="Link to this heading">#</a></h2>
+<p>Geemap provides convenient functions to download ImageCollections or Images directly to your local machine as GeoTIFF files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define an area of interest</span>
+<span class="n">roi</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">([</span><span class="mf">77.59</span><span class="p">,</span> <span class="mf">12.97</span><span class="p">])</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
+
+<span class="c1"># Select an image</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s2">&quot;LANDSAT/LC08/C02/T1_L2&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filterBounds</span><span class="p">(</span><span class="n">roi</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filterDate</span><span class="p">(</span><span class="s1">&#39;2023-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2023-12-31&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">first</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;SR_B4&#39;</span><span class="p">,</span> <span class="s1">&#39;SR_B3&#39;</span><span class="p">,</span> <span class="s1">&#39;SR_B2&#39;</span><span class="p">])</span>
+
+<span class="c1"># Export to local GeoTIFF</span>
+<span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Downloads&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_dir</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s2">&quot;landsat_export.tif&quot;</span><span class="p">)</span>
+
+<span class="n">geemap</span><span class="o">.</span><span class="n">ee_export_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">roi</span><span class="p">,</span> <span class="n">file_per_band</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="loading-exported-data-with-xarray">
+<h2>Loading Exported Data with Xarray<a class="headerlink" href="#loading-exported-data-with-xarray" title="Link to this heading">#</a></h2>
+<p>Once downloaded, we can use <code class="docutils literal notranslate"><span class="pre">rioxarray</span></code> to load the GeoTIFF into an Xarray dataset for local, lightning-fast analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the local file</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">rds</span> <span class="o">=</span> <span class="n">rioxarray</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    
+    <span class="c1"># Convert to Xarray Dataset and rename bands if needed</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rds</span><span class="p">)</span>
+    
+    <span class="c1"># Plotting</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">rds</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Locally Loaded Landsat Export&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparing-direct-loading-vs-export">
+<h2>Comparing Direct Loading vs. Export<a class="headerlink" href="#comparing-direct-loading-vs-export" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Direct (Xee)</p></th>
+<th class="head"><p>Export (Geemap)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Latency</p></td>
+<td><p>High (Network)</p></td>
+<td><p>Low (Local Disk)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Storage</p></td>
+<td><p>None (Lazy)</p></td>
+<td><p>Required (Disk Space)</p></td>
+</tr>
+<tr class="row-even"><td><p>Scale</p></td>
+<td><p>Best for summaries</p></td>
+<td><p>Best for full-res local work</p></td>
+</tr>
+<tr class="row-odd"><td><p>Usage</p></td>
+<td><p>Real-time Analysis</p></td>
+<td><p>Repeatable Workflows</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -455,14 +514,14 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="gee_xee_dask.html"
-       title="next page">
+    <a class="left-prev"
+       href="ml_stats.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Google Earth Engine, Xarray, and Dask</p>
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Machine Learning and Statistics with GEE</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -480,9 +539,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#content">Content</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials">Tutorials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#external-resources">External Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-data-with-geemap">Exporting Data with Geemap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-exported-data-with-xarray">Loading Exported Data with Xarray</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparing-direct-loading-vs-export">Comparing Direct Loading vs. Export</a></li>
 </ul>
   </nav></div>
 

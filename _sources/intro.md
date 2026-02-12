@@ -8,12 +8,14 @@ This project demonstrates how to use Google Earth Engine (GEE) with `xarray` and
 - **Dask Parallelization**: Scaling geospatial computations with Dask.
 - **GeoPandas & OSM**: Combining GEE data with local vector data and OpenStreetMap.
 - **ML & Statistics**: Implementing Scikit-Learn and statistical models on Earth Engine data.
+- **Geemap Export**: Direct downloading of data for fast local analysis.
 
 ## Tutorials
 
 1. [Basics: GEE with Xee & Dask](gee_xee_dask.ipynb)
 2. [Vector Integration: GeoPandas & OSM](geopandas_osm.ipynb)
 3. [Analytics: ML & Statistics](ml_stats.ipynb)
+4. [Storage: Geemap Export & Local Load](geemap_export.ipynb)
 
 ## External Resources
 
